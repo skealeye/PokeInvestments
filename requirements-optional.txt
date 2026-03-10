@@ -1,0 +1,4 @@
+# Optional: Facebook Prophet for long-range forecasting (5-10 year horizons)
+# Requires CmdStan - see https://mc-stan.org/cmdstan/
+prophet>=1.1.5
+cmdstanpy>=1.2.0
