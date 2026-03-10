@@ -20,72 +20,75 @@ SV_SETS = [
 
 # Products per set: (product_type, has_product, msrp, name_suffix)
 # msrp values: BB ~$144, ETB ~$50, PC ETB ~$65
+# Verified against live TCGCSV data 2026-03-10
+# sv3pt5 (Paldean Fates), sv6pt5 (Shrouded Fable), sv8pt5 (Prismatic Evolutions)
+# were special sets with no traditional booster box retail release.
 PRODUCT_MATRIX = {
     "sv1":    [("booster_box", True, 143.64, "Booster Box"),
                ("etb", True, 49.99, "Elite Trainer Box"),
                ("pc_etb", True, 64.99, "Pokemon Center ETB")],
     "sv2":    [("booster_box", True, 143.64, "Booster Box"),
                ("etb", True, 49.99, "Elite Trainer Box"),
-               ("pc_etb", False, None, None)],
+               ("pc_etb", True, 64.99, "Pokemon Center ETB")],
     "sv3":    [("booster_box", True, 143.64, "Booster Box"),
                ("etb", True, 49.99, "Elite Trainer Box"),
-               ("pc_etb", False, None, None)],
+               ("pc_etb", True, 64.99, "Pokemon Center ETB")],
     "sv4":    [("booster_box", True, 143.64, "Booster Box"),
                ("etb", True, 49.99, "Elite Trainer Box"),
                ("pc_etb", True, 64.99, "Pokemon Center ETB")],
-    "sv3pt5": [("booster_box", True, 143.64, "Booster Box"),
+    "sv3pt5": [("booster_box", False, None, None),
                ("etb", True, 49.99, "Elite Trainer Box"),
                ("pc_etb", True, 64.99, "Pokemon Center ETB")],
     "sv5":    [("booster_box", True, 143.64, "Booster Box"),
                ("etb", True, 49.99, "Elite Trainer Box"),
-               ("pc_etb", False, None, None)],
+               ("pc_etb", True, 64.99, "Pokemon Center ETB")],
     "sv6":    [("booster_box", True, 143.64, "Booster Box"),
                ("etb", True, 49.99, "Elite Trainer Box"),
                ("pc_etb", True, 64.99, "Pokemon Center ETB")],
-    "sv6pt5": [("booster_box", True, 143.64, "Booster Box"),
+    "sv6pt5": [("booster_box", False, None, None),
                ("etb", True, 49.99, "Elite Trainer Box"),
                ("pc_etb", True, 64.99, "Pokemon Center ETB")],
     "sv7":    [("booster_box", True, 143.64, "Booster Box"),
                ("etb", True, 49.99, "Elite Trainer Box"),
-               ("pc_etb", False, None, None)],
+               ("pc_etb", True, 64.99, "Pokemon Center ETB")],
     "sv8":    [("booster_box", True, 143.64, "Booster Box"),
                ("etb", True, 49.99, "Elite Trainer Box"),
                ("pc_etb", True, 64.99, "Pokemon Center ETB")],
-    "sv8pt5": [("booster_box", True, 143.64, "Booster Box"),
+    "sv8pt5": [("booster_box", False, None, None),
                ("etb", True, 49.99, "Elite Trainer Box"),
                ("pc_etb", True, 64.99, "Pokemon Center ETB")],
 }
 
-# TCGCSV group IDs for each set (TCGPlayer group IDs for sealed products)
-# These are the actual TCGPlayer group IDs from TCGCSV
+# Correct TCGCSV group IDs — verified live against tcgcsv.com/tcgplayer/3/groups
 TCGCSV_GROUP_IDS = {
-    "sv1":    "23057",
-    "sv2":    "23223",
-    "sv3":    "23475",
-    "sv4":    "23737",
-    "sv3pt5": "23868",
-    "sv5":    "23977",
-    "sv6":    "24077",
-    "sv6pt5": "24273",
-    "sv7":    "24396",
-    "sv8":    "24501",
-    "sv8pt5": "24583",
+    "sv1":    "22873",
+    "sv2":    "23120",
+    "sv3":    "23228",
+    "sv4":    "23286",
+    "sv3pt5": "23353",
+    "sv5":    "23381",
+    "sv6":    "23473",
+    "sv6pt5": "23529",
+    "sv7":    "23537",
+    "sv8":    "23651",
+    "sv8pt5": "23821",
 }
 
-# Known TCGPlayer product IDs for specific sealed products
-# Format: {set_code: {product_type: product_id}}
+# Correct TCGCSV product IDs — verified live against tcgcsv.com products endpoints.
+# For sets with multiple ETB variants (Koraidon/Miraidon, Iron Valiant/Roaring Moon, etc.)
+# we track one representative product; the aggregator matches by product ID.
 TCGCSV_PRODUCT_IDS = {
-    "sv1":    {"booster_box": "513416", "etb": "513418", "pc_etb": "513421"},
-    "sv2":    {"booster_box": "524397", "etb": "524399"},
-    "sv3":    {"booster_box": "530720", "etb": "530722"},
-    "sv4":    {"booster_box": "538637", "etb": "538639", "pc_etb": "538642"},
-    "sv3pt5": {"booster_box": "541901", "etb": "541903", "pc_etb": "541906"},
-    "sv5":    {"booster_box": "544771", "etb": "544773"},
-    "sv6":    {"booster_box": "548271", "etb": "548273", "pc_etb": "548276"},
-    "sv6pt5": {"booster_box": "553041", "etb": "553043", "pc_etb": "553046"},
-    "sv7":    {"booster_box": "556521", "etb": "556523"},
-    "sv8":    {"booster_box": "559961", "etb": "559963", "pc_etb": "559966"},
-    "sv8pt5": {"booster_box": "562081", "etb": "562083", "pc_etb": "562086"},
+    "sv1":    {"booster_box": "476452", "etb": "478335", "pc_etb": "478756"},
+    "sv2":    {"booster_box": "493975", "etb": "493974", "pc_etb": "493973"},
+    "sv3":    {"booster_box": "501257", "etb": "501264", "pc_etb": "501266"},
+    "sv4":    {"booster_box": "512821", "etb": "512813", "pc_etb": "512801"},
+    "sv3pt5": {                         "etb": "528040", "pc_etb": "528039"},
+    "sv5":    {"booster_box": "536225", "etb": "532845", "pc_etb": "532853"},
+    "sv6":    {"booster_box": "543846", "etb": "543845", "pc_etb": "543844"},
+    "sv6pt5": {                         "etb": "552999", "pc_etb": "552998"},
+    "sv7":    {"booster_box": "557354", "etb": "557350", "pc_etb": "557340"},
+    "sv8":    {"booster_box": "565606", "etb": "565630", "pc_etb": "565632"},
+    "sv8pt5": {                         "etb": "593355", "pc_etb": "593324"},
 }
 
 
