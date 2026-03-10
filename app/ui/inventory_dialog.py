@@ -5,7 +5,7 @@ from PyQt6.QtWidgets import (
     QDialog, QVBoxLayout, QHBoxLayout, QFormLayout,
     QLabel, QSpinBox, QDoubleSpinBox, QDateEdit, QLineEdit,
     QPushButton, QTableWidget, QTableWidgetItem, QHeaderView,
-    QMessageBox, QFrame, QSizePolicy
+    QMessageBox, QFrame, QSizePolicy, QWidget
 )
 from PyQt6.QtCore import Qt, QDate, pyqtSignal
 from PyQt6.QtGui import QColor
