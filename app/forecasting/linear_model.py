@@ -50,12 +50,31 @@ class LinearForecastModel(ForecastModel):
 
     def fit(self, history: pd.DataFrame) -> None:
         df = history.sort_values("ds").reset_index(drop=True)
-        X = self._build_features(df)
-        y = np.log(np.clip(df["y"].values, 0.01, None))
 
         self._start_date = df["ds"].iloc[0]
         self._last_day = (df["ds"].iloc[-1] - self._start_date).days
         self._last_row = df.iloc[-1:]
+        self._sparse = len(df) < 10
+
+        if self._sparse:
+            # Not enough points for reliable regression — store current price
+            # and derive a growth rate from MSRP ratio only when we have
+            # enough elapsed days to make the annualisation meaningful.
+            self._current_price = float(df["y"].iloc[-1])
+            days_elapsed = max(self._last_day, 0)
+            if self.msrp and self.msrp > 0 and self._current_price > 0 and days_elapsed >= 30:
+                ratio = self._current_price / self.msrp
+                # Annualised growth implied by MSRP → current over elapsed time
+                self._annual_growth = max(0.0, ratio ** (365.0 / days_elapsed) - 1)
+                self._annual_growth = min(self._annual_growth, 0.40)  # cap 40%/yr
+            else:
+                # Default: sealed Pokemon historically appreciates ~8%/yr on average
+                self._annual_growth = 0.08
+            self._fitted = True
+            return
+
+        X = self._build_features(df)
+        y = np.log(np.clip(df["y"].values, 0.01, None))
 
         X_scaled = self._scaler.fit_transform(X)
         self._model.fit(X_scaled, y)
@@ -80,17 +99,28 @@ class LinearForecastModel(ForecastModel):
         if not self._fitted:
             raise RuntimeError("Model not fitted yet")
 
+        if self._sparse:
+            # Simple compound growth from current price
+            predicted = self._current_price * ((1 + self._annual_growth) ** horizon_years)
+            # Wide bands for sparse data — uncertainty grows with horizon
+            band_pct = 0.20 + horizon_years * 0.10
+            lower = predicted * (1 - band_pct)
+            upper = predicted * (1 + band_pct)
+            confidence = max(0.3, 0.60 - horizon_years * 0.05)
+            return ForecastResult(
+                horizon_years=horizon_years,
+                predicted_price=round(predicted, 2),
+                lower_bound=round(lower, 2),
+                upper_bound=round(upper, 2),
+                confidence=round(confidence, 3),
+                model_name=self.name,
+            )
+
         future_day = self._last_day + int(horizon_years * 365.25)
         future_date = self._start_date + pd.Timedelta(days=future_day)
 
-        # Build a single-row feature vector
         last_price = self._last_row["y"].values[0]
         month = future_date.month
-        future_df = pd.DataFrame({
-            "ds": [future_date],
-            "y": [last_price],
-        })
-        # Approximate rolling features with last known value
         roll30 = last_price
         roll90 = last_price
 

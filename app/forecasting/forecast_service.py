@@ -21,10 +21,8 @@ class ForecastService:
             return []
 
         df = _to_dataframe(history)
-        n_days = (df["ds"].iloc[-1] - df["ds"].iloc[0]).days
-
-        if n_days < MIN_HISTORY_DAYS_FOR_FORECAST:
-            logger.debug(f"Insufficient history ({n_days}d) for {product.name}")
+        if len(df) < MIN_HISTORY_DAYS_FOR_FORECAST:
+            logger.debug(f"Insufficient history ({len(df)} records) for {product.name}")
             return []
 
         results = []

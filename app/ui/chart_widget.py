@@ -196,8 +196,10 @@ class ChartWidget(QWidget):
             if forecast.lower_bound and forecast.upper_bound:
                 fc_lo = pg.PlotDataItem(fc_xs, np.array([last_price, forecast.lower_bound]))
                 fc_hi = pg.PlotDataItem(fc_xs, np.array([last_price, forecast.upper_bound]))
+                band_color = pg.mkColor(color)
+                band_color.setAlpha(20)
                 fc_band = pg.FillBetweenItem(fc_lo, fc_hi,
-                                             brush=pg.mkBrush(color[1:], 20))
+                                             brush=pg.mkBrush(band_color))
                 self.plot_widget.addItem(fc_band)
                 self._band_items.append(fc_band)
 
