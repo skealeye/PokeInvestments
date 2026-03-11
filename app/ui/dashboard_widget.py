@@ -19,7 +19,7 @@ from app.ui.filter_bar import FilterBar
 
 
 COLUMNS = [
-    "Set", "Product", "Type", "Market Price", "Low", "High",
+    "Set", "Product", "Type", "Market Price",
     "1Y Forecast", "2Y Forecast", "5Y Forecast", "10Y Forecast",
     "Owned", "Source"
 ]
@@ -28,14 +28,12 @@ COL_SET = 0
 COL_PRODUCT = 1
 COL_TYPE = 2
 COL_MARKET = 3
-COL_LOW = 4
-COL_HIGH = 5
-COL_1Y = 6
-COL_2Y = 7
-COL_5Y = 8
-COL_10Y = 9
-COL_OWNED = 10
-COL_SOURCE = 11
+COL_1Y = 4
+COL_2Y = 5
+COL_5Y = 6
+COL_10Y = 7
+COL_OWNED = 8
+COL_SOURCE = 9
 
 TYPE_DISPLAY = {
     "booster_box": "Booster Box",
@@ -69,7 +67,7 @@ class DashboardModel(QAbstractTableModel):
                     existing.market_price = market_price
                 self.dataChanged.emit(
                     self.index(i, COL_MARKET),
-                    self.index(i, COL_HIGH)
+                    self.index(i, COL_MARKET)
                 )
                 break
 
@@ -113,7 +111,7 @@ class DashboardModel(QAbstractTableModel):
             return self._fg_color(p, col, price)
 
         if role == Qt.ItemDataRole.TextAlignmentRole:
-            if col in (COL_MARKET, COL_LOW, COL_HIGH, COL_1Y, COL_2Y, COL_5Y, COL_10Y):
+            if col in (COL_MARKET, COL_1Y, COL_2Y, COL_5Y, COL_10Y):
                 return Qt.AlignmentFlag.AlignRight | Qt.AlignmentFlag.AlignVCenter
             if col == COL_OWNED:
                 return Qt.AlignmentFlag.AlignCenter | Qt.AlignmentFlag.AlignVCenter
@@ -133,10 +131,6 @@ class DashboardModel(QAbstractTableModel):
             return TYPE_DISPLAY.get(p.product_type, p.product_type)
         if col == COL_MARKET:
             return f"${price.market_price:.2f}" if price and price.market_price else "N/A"
-        if col == COL_LOW:
-            return f"${price.low_price:.2f}" if price and price.low_price else "N/A"
-        if col == COL_HIGH:
-            return f"${price.high_price:.2f}" if price and price.high_price else "N/A"
         if col in (COL_1Y, COL_2Y, COL_5Y, COL_10Y):
             horizon = {COL_1Y: 1, COL_2Y: 2, COL_5Y: 5, COL_10Y: 10}[col]
             f = self._forecasts.get((p.id, horizon))
@@ -235,7 +229,7 @@ class DashboardWidget(QWidget):
         hh.setSectionResizeMode(COL_SET, QHeaderView.ResizeMode.ResizeToContents)
         hh.setSectionResizeMode(COL_PRODUCT, QHeaderView.ResizeMode.Stretch)
         hh.setSectionResizeMode(COL_TYPE, QHeaderView.ResizeMode.ResizeToContents)
-        for col in (COL_MARKET, COL_LOW, COL_HIGH, COL_1Y, COL_2Y, COL_5Y, COL_10Y):
+        for col in (COL_MARKET, COL_1Y, COL_2Y, COL_5Y, COL_10Y):
             hh.setSectionResizeMode(col, QHeaderView.ResizeMode.ResizeToContents)
         hh.setSectionResizeMode(COL_OWNED, QHeaderView.ResizeMode.ResizeToContents)
         hh.setSectionResizeMode(COL_SOURCE, QHeaderView.ResizeMode.ResizeToContents)
